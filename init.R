@@ -1,3 +1,4 @@
+library(igraph)
 library(rtweet)
 library(dplyr)
 library(tidyr)
@@ -10,7 +11,7 @@ library(tidytext)
 # creating a cache --------------------------------------------------------
 setCacheDir("data")
 cacheFile <- "data/asc_tweets.rds"
-TWEET_REFRESH_ENABLED <- TRUE
+TWEET_REFRESH_ENABLED <- FALSE
 # function to get ASC tweets ----------------------------------------------
 obtain_new_tweets <- function(max_id) {
   #phrases relevant to ASC
@@ -69,14 +70,15 @@ simpleCache("top_10_hashtags", {
 
 simpleCache("top_10_tweeters",{
   asc_tweets %>% 
-  select(screen_name,favorite_count,retweet_count,reply_count,is_retweet) %>% 
-  filter(is_retweet == F) %>% 
-  modify_if(is.integer,~if_else(is.na(.),0,as.double(.))) %>% 
-  mutate(engagement = favorite_count + retweet_count + reply_count) %>% 
-  select(screen_name,engagement) %>% 
-  arrange(desc(engagement)) %>% 
-  top_n(10)
-}
+    select(screen_name,favorite_count,retweet_count,reply_count,is_retweet) %>% 
+    filter(is_retweet == F) %>% 
+    modify_if(is.integer,~if_else(is.na(.),0,as.double(.))) %>% 
+    group_by(screen_name) %>% 
+    mutate(engagement = favorite_count+retweet_count+reply_count) %>% 
+    select(screen_name,engagement) %>% 
+    arrange(desc(engagement)) %>% 
+    top_n(10)
+} 
 )
 
 simpleCache("tweets_time",{
@@ -85,3 +87,11 @@ asc_tweets %>%
   index_by(time = as_date(created_at)) %>% 
   summarise(tweets = n())
 })
+simpleCache("network_data1",{
+test <- asc_tweets %>%
+  filter(retweet_count > 0) %>% 
+  select(screen_name,mentions_screen_name) %>% 
+  unnest(mentions_screen_name) %>%
+  filter(!is.na(mentions_screen_name)) 
+})
+
