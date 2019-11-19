@@ -5,9 +5,9 @@ account: seathebass
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1470759
-bundleId: 2590675
+bundleId: 2593304
 url: https://seathebass.shinyapps.io/asc19_tweets/
-when: 1573780301.03012
+when: 1573875882.68736
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: .Rbuildignore|README.md|README.Rmd

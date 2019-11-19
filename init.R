@@ -75,10 +75,11 @@ simpleCache("top_10_tweeters",{
     modify_if(is.integer,~if_else(is.na(.),0,as.double(.))) %>% 
     group_by(screen_name) %>% 
     mutate(engagement = favorite_count+retweet_count+reply_count) %>% 
+    ungroup() %>% 
     select(screen_name,engagement) %>% 
     arrange(desc(engagement)) %>% 
     top_n(10)
-} 
+  } 
 )
 
 simpleCache("tweets_time",{
@@ -86,7 +87,7 @@ asc_tweets %>%
   as_tsibble(index = created_at,validate = FALSE) %>% 
   index_by(time = as_date(created_at)) %>% 
   summarise(tweets = n())
-})
+  })
 simpleCache("network_data1",{
 test <- asc_tweets %>%
   filter(retweet_count > 0) %>% 

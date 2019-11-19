@@ -62,7 +62,7 @@ ui <- dashboardPage(
                         title = "Filter tweets here",
                         sliderInput(
                             "likes_filter",
-                            label = NULL,
+                            label = "Likes Filter",
                             value = c(
                                 min(asc_tweets$favorite_count) + 1,
                                 max(asc_tweets$favorite_count) - 1
@@ -72,7 +72,7 @@ ui <- dashboardPage(
                         ),
                         sliderInput(
                             "retweet_filter",
-                            label = NULL,
+                            label = "retweet filter",
                             value = c(
                                 min(asc_tweets$retweet_count) + 1,
                                 max(asc_tweets$retweet_count) - 1
